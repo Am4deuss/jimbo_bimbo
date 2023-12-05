@@ -36,12 +36,9 @@ public class LogicManager {
     }
 
     // Checks if another flight has the same flight airline, departure city and arrival city
-    public boolean createFlightCheck(String departureCity, String airline, String arrivalCity){
+    public boolean createFlightCheck(String departureCity, String airline, String arrivalCity) {
         for(Map.Entry<String, Flight> entry : flights.entrySet()){
             Flight currentFlight = entry.getValue();
-            System.out.println(currentFlight.getDepartureCity());
-            System.out.println(currentFlight.getAirline());
-            System.out.println(currentFlight.getArrivalCity());
             if((Objects.equals(departureCity, currentFlight.getDepartureCity())) && (Objects.equals(airline, currentFlight.getAirline())) && (Objects.equals(arrivalCity, currentFlight.getArrivalCity()))){
                 return false;
             } else {
@@ -49,13 +46,22 @@ public class LogicManager {
             }
 
         }
-
         return true;
     }
 
     public void createFlight(String flightNr, String departureCity, String time, String date, String arrivalCity, String airline, String seats, String flightTime){
         Flight flight = new Flight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);
         flights.put(flightNr, flight);
+    }
+
+    // (6) Remove Flight
+    public boolean removeFlight(String flightNr){
+        if(flights.containsKey(flightNr)){
+            flights.remove(flightNr);
+            return true;
+        } else{
+            return false;
+        }
     }
 
 }

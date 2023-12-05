@@ -24,72 +24,126 @@ public class UIManager {
             System.out.println((i + 1) + ". " + options[i]);
         }
         System.out.print("========│ val: ");
-        int choice = input.nextInt();
+        String choice = input.next();
 
         switch(choice) {
-            case 5: {
-                // Flight Number
-                String flightNr;
-                while (true) {
-                    System.out.print("Flight-nummer: ");
-                    flightNr = input.next();
+            case "2": {
+                createBooking();
+                break;
+            }
 
-                    if (this.logic.flightnrCheck(flightNr)) {
-                        break;
-                    } else {
-                        System.out.println("Flight-nummer existerar redan.");
-                    }
-                }
+            case "5": {
+                createFlight();
+                break;
+            }
 
-                // Departure City
-                System.out.print("Avgångsstad: ");
-                String departureCity = input.next();
+            // Remove Flight
+            case "6": {
+                rmFlight();
+                break;
+            }
+        }
+    }
 
-                // Departure Time
-                System.out.print("Avgångstid: ");
-                String time = input.next();
+    public void createBooking(){
+        // Updatable booking?
+        System.out.print("Uppdateringsbar resa (y/n): ");
+        String updatable = input.next();
 
-                // Departure Date
-                System.out.print("Avgångsdag: ");
-                String date = input.next();
+        // Flight number
+        String flightNr;
+        while (true) {
+            System.out.print("Flight-nummer: ");
+            flightNr = input.next();
 
-                // Arrival City
-                System.out.print("Ankomstdag: ");
-                String arrivalCity = input.next();
-
-                // Airline
-                System.out.print("Flygbolag: ");
-                String airline = input.next();
-
-                // Seat specification
-                String seats;
-                while (true) {
-                    System.out.print("Platser: ");
-                    seats = input.next();
-
-                    if (this.logic.seatCheck(seats)) {
-                        break;
-                    } else {
-                        System.out.println("Numret måste vara mellan 80 och 380.");
-                    }
-                }
-
-                // Flight time/duration
-                System.out.print("Flygtid: ");
-                String flightTime = input.next();
-
-                if(logic.createFlightCheck(departureCity, airline, arrivalCity)){
-                    logic.createFlight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);
-                } else {
-                    System.out.println("Error: Ett annat flyg har samma flygbolag, avgångsstad och ankomststad.");
-                }
-
-                logic.showFlights();
-
-                show_menu();
+            if (this.logic.removeFlight(flightNr)) {
+                break;
+            } else {
+                System.out.println("Angivet Flight-nummer: " + flightNr + " finns ej.");
             }
         }
 
-        //}
+        // Passenger-ID
+
+    }
+
+    public void createFlight(){
+        // Flight Number
+        String flightNr;
+        while (true) {
+            System.out.print("Flight-nummer: ");
+            flightNr = input.next();
+
+            if (this.logic.flightnrCheck(flightNr)) {
+                break;
+            } else {
+                System.out.println("Flight-nummer existerar redan.");
+            }
+        }
+
+        // Departure City
+        System.out.print("Avgångsstad: ");
+        String departureCity = input.next();
+
+        // Departure Time
+        System.out.print("Avgångstid: ");
+        String time = input.next();
+
+        // Departure Date
+        System.out.print("Avgångsdag: ");
+        String date = input.next();
+
+        // Arrival City
+        System.out.print("Ankomstdag: ");
+        String arrivalCity = input.next();
+
+        // Airline
+        System.out.print("Flygbolag: ");
+        String airline = input.next();
+
+        // Seat specification
+        String seats;
+        while (true) {
+            System.out.print("Platser: ");
+            seats = input.next();
+
+            if (this.logic.seatCheck(seats)) {
+                break;
+            } else {
+                System.out.println("Numret måste vara mellan 80 och 380.");
+            }
+        }
+
+        // Flight time/duration
+        System.out.print("Flygtid: ");
+        String flightTime = input.next();
+
+        if(logic.createFlightCheck(departureCity, airline, arrivalCity)){
+            logic.createFlight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);
+        } else {
+            System.out.println("Error: Ett annat flyg har samma flygbolag, avgångsstad och ankomststad.");
+        }
+
+        logic.showFlights();
+
+        show_menu();
+    }
+
+    public void rmFlight(){
+        String flightNr;
+        while (true) {
+            System.out.print("Flight-nummer: ");
+            flightNr = input.next();
+
+            if (this.logic.removeFlight(flightNr)) {
+                break;
+            } else {
+                System.out.println("Angivet Flight-nummer: " + flightNr + " finns ej.");
+            }
+        }
+
+        logic.showFlights();
+
+        show_menu();
     }
 }
