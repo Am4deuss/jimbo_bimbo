@@ -48,13 +48,13 @@ public class UIManager {
     public void createBooking(){
         // Updatable booking?
         System.out.print("Uppdateringsbar resa (y/n): ");
-        String updatable = input.next();
+        String updatable = input.next(); // REGEX "y or n" ??? Up for debate
 
         // Flight number
         String flightNr;
         while (true) {
             System.out.print("Flight-nummer: ");
-            flightNr = input.next();
+            flightNr = input.next(); // REGEX HERE "AZ-123", Check if flight is not fully booked (if full -> ERROR)
 
             if (this.logic.removeFlight(flightNr)) {
                 break;
@@ -64,7 +64,23 @@ public class UIManager {
         }
 
         // Passenger-ID
+        System.out.print("Passagerar-ID: ");
+        String passengerID = input.next(); // REGEX HERE "yymmddxxxx" (Numbers 0-9) (Personal identification number)
 
+        // Name (Firstname, Lastname)
+        System.out.print("Namn (för och efternamn");
+        String name = input.next(); // Input management here
+
+        // Year
+        System.out.print("År: ");
+        String year = input.next(); // REGEX HERE "0000" (INT 1-9), Input management - year can not have passed
+
+        // Week
+        System.out.print("Vecka: ");
+        String week = input.next(); // (ONLY INTS ALLOWED (MAYBE TRY/CATCH)) Input management - week can not have passed, Must be in range of 1-52
+
+        // If all of this is correct -> Booking successfully created!
+        // Call createBooking() in logic
     }
 
     public void createFlight(){
@@ -72,7 +88,7 @@ public class UIManager {
         String flightNr;
         while (true) {
             System.out.print("Flight-nummer: ");
-            flightNr = input.next();
+            flightNr = input.next(); // REGEX HERE "AZ-123"
 
             if (this.logic.flightnrCheck(flightNr)) {
                 break;
@@ -83,23 +99,23 @@ public class UIManager {
 
         // Departure City
         System.out.print("Avgångsstad: ");
-        String departureCity = input.next();
+        String departureCity = input.next(); // Pre-programmed from list of cities
 
         // Departure Time
         System.out.print("Avgångstid: ");
-        String time = input.next();
+        String time = input.next(); // Used for calculations later together with date, flightTime
 
         // Departure Date
         System.out.print("Avgångsdag: ");
-        String date = input.next();
+        String date = input.next(); // Used for calculations together with time, flightTime
 
         // Arrival City
-        System.out.print("Ankomstdag: ");
-        String arrivalCity = input.next();
+        System.out.print("Ankomststad: ");
+        String arrivalCity = input.next(); // Pre-programmed from list of cities
 
         // Airline
         System.out.print("Flygbolag: ");
-        String airline = input.next();
+        String airline = input.next(); // Pre-programmed from list of airlines
 
         // Seat specification
         String seats;
@@ -116,7 +132,7 @@ public class UIManager {
 
         // Flight time/duration
         System.out.print("Flygtid: ");
-        String flightTime = input.next();
+        String flightTime = input.next(); // Used for calculations together with time, date
 
         if(logic.createFlightCheck(departureCity, airline, arrivalCity)){
             logic.createFlight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);
@@ -124,7 +140,7 @@ public class UIManager {
             System.out.println("Error: Ett annat flyg har samma flygbolag, avgångsstad och ankomststad.");
         }
 
-        logic.showFlights();
+        logic.showFlights(); // Debug
 
         show_menu();
     }
@@ -133,7 +149,7 @@ public class UIManager {
         String flightNr;
         while (true) {
             System.out.print("Flight-nummer: ");
-            flightNr = input.next();
+            flightNr = input.next(); // REGEX HERE "AZ-123"
 
             if (this.logic.removeFlight(flightNr)) {
                 break;
@@ -142,7 +158,7 @@ public class UIManager {
             }
         }
 
-        logic.showFlights();
+        logic.showFlights(); // Debug
 
         show_menu();
     }
