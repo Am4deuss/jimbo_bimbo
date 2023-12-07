@@ -4,6 +4,7 @@ package se.jimboagency.bookingsystem.ui;
 import se.jimboagency.bookingsystem.logic.LogicManager;
 
 // Library-import
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class UIManager {
@@ -68,7 +69,7 @@ public class UIManager {
         String passengerID = input.next(); // REGEX HERE "yymmddxxxx" (Numbers 0-9) (Personal identification number)
 
         // Name (Firstname, Lastname)
-        System.out.print("Namn (för och efternamn");
+        System.out.print("Namn (för och efternamn): ");
         String name = input.next(); // Input management here
 
         // Year
@@ -77,7 +78,18 @@ public class UIManager {
 
         // Week
         System.out.print("Vecka: ");
-        String week = input.next(); // (ONLY INTS ALLOWED (MAYBE TRY/CATCH)) Input management - week can not have passed, Must be in range of 1-52
+        // (ONLY INTS ALLOWED (MAYBE TRY/CATCH)) Input management - week can not have passed, Must be in range of 1-52
+        while (true) {
+            try {
+                int week = input.nextInt();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Fel format. Skriv ett tal.");
+                System.out.println("Försök igen: ");
+                input.nextLine(); // Consume the invalid input
+            }
+        }
+
 
         // If all of this is correct -> Booking successfully created!
         // Call createBooking() in logic
@@ -102,8 +114,17 @@ public class UIManager {
         String departureCity = input.next(); // Pre-programmed from list of cities
 
         // Departure Time
-        System.out.print("Avgångstid: ");
-        String time = input.next(); // Used for calculations later together with date, flightTime
+        System.out.print("Avgångstid (Skrivs enligt 00:00): ");
+        String time; // REGEX "00:59"
+        while (true) {
+            time = input.next();
+            if(!this.logic.timeCheck(time)){
+                System.out.println("Fel format.");
+                System.out.print("Försök igen: ");
+            } else {
+                break;
+            }
+        }
 
         // Departure Date
         System.out.print("Avgångsdag: ");
@@ -118,21 +139,43 @@ public class UIManager {
         String airline = input.next(); // Pre-programmed from list of airlines
 
         // Seat specification
-        String seats;
+        int seats;
         while (true) {
-            System.out.print("Platser: ");
-            seats = input.next();
+            try {
+                System.out.print("Platser: ");
+                seats = input.nextInt();
 
-            if (this.logic.seatCheck(seats)) {
-                break;
-            } else {
-                System.out.println("Numret måste vara mellan 80 och 380.");
+                if (!this.logic.seatCheck(seats)) { // Checks if integer is between 80-380
+                    System.out.println("Numret måste vara mellan 80 och 380.");
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) { // Input is not an integer -> ERROR
+                System.out.println("Fel format. Skriv ett tal.");
+                System.out.print("Försök igen: ");
+                input.nextLine(); // Consume the invalid input
             }
         }
 
         // Flight time/duration
+        int flightTime;
         System.out.print("Flygtid: ");
-        String flightTime = input.next(); // Used for calculations together with time, date
+        while (true) {
+            try {
+                flightTime = input.nextInt();
+                if(!this.logic.flightTimeCheck(flightTime)){ // Checks if integer is greater than 0
+                    System.out.println("Talet måste vara större än 0.");
+                    System.out.print("Försök igen: ");
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) { // Input is not an integer -> ERROR
+                System.out.println("Fel format. Skriv ett tal.");
+                System.out.print("Försök igen: ");
+                input.nextLine(); // Consume the invalid input
+            }
+        }
+
 
         if(logic.createFlightCheck(departureCity, airline, arrivalCity)){
             logic.createFlight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);

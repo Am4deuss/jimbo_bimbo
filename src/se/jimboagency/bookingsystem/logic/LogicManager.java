@@ -3,6 +3,7 @@ package se.jimboagency.bookingsystem.logic;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class LogicManager {
 
@@ -30,9 +31,25 @@ public class LogicManager {
         }
     }
 
-    public boolean seatCheck(String seats) {
-        int intSeats = Integer.parseInt(seats);
-        return (intSeats >= 80) && (intSeats <= 380);
+    public boolean timeCheck(String time){
+        String regex;
+        if(time.charAt(0) == '2'){ // Changes regex depending on if the first char is 0-1 or 2
+            regex = "^[0-2][0-3]:[0-5][0-9]$";
+        } else {
+            regex = "^[0-1][0-9]:[0-5][0-9]$";
+        }
+        Pattern pattern = Pattern.compile(regex);
+        boolean check = pattern.matcher(time).matches();
+        return check; // Returns true if input matches pattern
+
+    }
+
+    public boolean seatCheck(int seats) {
+        return (seats >= 80) && (seats <= 380);
+    }
+
+    public boolean flightTimeCheck(int flightTime){
+        return flightTime > 0;
     }
 
     // Checks if another flight has the same flight airline, departure city and arrival city
@@ -49,8 +66,10 @@ public class LogicManager {
         return true;
     }
 
-    public void createFlight(String flightNr, String departureCity, String time, String date, String arrivalCity, String airline, String seats, String flightTime){
-        Flight flight = new Flight(flightNr, departureCity, time, date, arrivalCity, airline, seats, flightTime);
+    public void createFlight(String flightNr, String departureCity, String time, String date, String arrivalCity, String airline, int seats, int flightTime){
+        String seatsString = Integer.toString(seats);
+        String flightTimeString = Integer.toString(flightTime);
+        Flight flight = new Flight(flightNr, departureCity, time, date, arrivalCity, airline, seatsString, flightTimeString);
         flights.put(flightNr, flight);
     }
 
