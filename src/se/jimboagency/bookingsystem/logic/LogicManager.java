@@ -14,13 +14,26 @@ public class LogicManager {
     // Constructor
     public LogicManager() {
         currentDate = LocalDate.now();
+
         flights = new HashMap<String, Flight>();
         flights.put("AA-123", new Flight("AA-123","a","a","a","a","a","a","a"));
+
+        bookings = new HashMap<String, Booking>();
+        bookings.put("test1", new UpdatableBooking());
+        bookings.put("test2", new UnUpdatableBooking());
+
+        showBookings();
     }
 
     // Error-management (ONLY FOR DEBUG)
     public void showFlights(){
         for (Map.Entry<String, Flight> entry : flights.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public void showBookings(){
+        for (Map.Entry<String, Booking> entry : bookings.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }

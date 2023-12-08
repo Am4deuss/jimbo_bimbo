@@ -23,15 +23,15 @@ public class Flight {
         this.flightTime = flightTime;
     }
 
-    public String getDepartureCity() {
+    public String getDepartureCity(){
         return departureCity;
     }
 
-    public String getAirline() {
+    public String getAirline(){
         return airline;
     }
 
-    public String getArrivalCity() {
+    public String getArrivalCity(){
         return arrivalCity;
     }
 }
