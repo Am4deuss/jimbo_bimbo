@@ -52,15 +52,16 @@ public class UIManager {
         String updatable = input.next(); // REGEX "y or n" ??? Up for debate
 
         // Flight number
+        System.out.print("Flight-nummer: ");
         String flightNr;
         while (true) {
-            System.out.print("Flight-nummer: ");
-            flightNr = input.next(); // REGEX HERE "AZ-123", Check if flight is not fully booked (if full -> ERROR)
+            flightNr = input.next(); // Check if flight is not fully booked (if full -> ERROR)
 
-            if (this.logic.removeFlight(flightNr)) {
+            if (this.logic.flightnrCheck(flightNr)) {
                 break;
             } else {
                 System.out.println("Angivet Flight-nummer: " + flightNr + " finns ej.");
+                System.out.println("Försök igen: ");
             }
         }
 
@@ -97,13 +98,18 @@ public class UIManager {
 
     public void createFlight(){
         // Flight Number
+        System.out.print("Flight-nummer: ");
         String flightNr;
         while (true) {
-            System.out.print("Flight-nummer: ");
-            flightNr = input.next(); // REGEX HERE "AZ-123"
+            flightNr = input.next();
 
             if (this.logic.flightnrCheck(flightNr)) {
-                break;
+                if (this.logic.flightnrPatternCheck(flightNr)){
+                    break;
+                } else {
+                    System.out.println("Fel format.");
+                    System.out.println("Försök igen: ");
+                }
             } else {
                 System.out.println("Flight-nummer existerar redan.");
             }
@@ -118,7 +124,7 @@ public class UIManager {
         String time; // REGEX "00:59"
         while (true) {
             time = input.next();
-            if(!this.logic.timeCheck(time)){
+            if(!this.logic.timePatternCheck(time)){
                 System.out.println("Fel format.");
                 System.out.print("Försök igen: ");
             } else {
@@ -189,10 +195,10 @@ public class UIManager {
     }
 
     public void rmFlight(){
+        System.out.print("Flight-nummer: ");
         String flightNr;
         while (true) {
-            System.out.print("Flight-nummer: ");
-            flightNr = input.next(); // REGEX HERE "AZ-123"
+            flightNr = input.next();
 
             if (this.logic.removeFlight(flightNr)) {
                 break;

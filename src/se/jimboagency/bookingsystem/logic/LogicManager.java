@@ -22,7 +22,7 @@ public class LogicManager {
         }
     }
 
-    // (5) Create Flight related functions
+    // (*) Functions used in several places
     public boolean flightnrCheck(String flightNr) {
         if(flights.containsKey(flightNr)){
             return false;
@@ -31,7 +31,23 @@ public class LogicManager {
         }
     }
 
-    public boolean timeCheck(String time){
+    // (1) Search for Booking related functions
+
+    // (2) Create Booking related functions
+
+    // (3) Remove Booking (Cancel Booking) related functions
+
+    // (4) Update Booking related functions
+
+    // (5) Create Flight related functions
+    public boolean flightnrPatternCheck(String flightNr){
+        String regex;
+        regex = "^[A-Z]{2}-[0-9]{3}$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(flightNr).matches(); // Returns true if input matches pattern
+    }
+
+    public boolean timePatternCheck(String time){
         String regex;
         if(time.charAt(0) == '2'){ // Changes regex depending on if the first char is 0-1 or 2
             regex = "^[0-2][0-3]:[0-5][0-9]$";
@@ -39,9 +55,7 @@ public class LogicManager {
             regex = "^[0-1][0-9]:[0-5][0-9]$";
         }
         Pattern pattern = Pattern.compile(regex);
-        boolean check = pattern.matcher(time).matches();
-        return check; // Returns true if input matches pattern
-
+        return pattern.matcher(time).matches(); // Returns true if input matches pattern
     }
 
     public boolean seatCheck(int seats) {
@@ -82,5 +96,7 @@ public class LogicManager {
             return false;
         }
     }
+
+    // (7) Statistics (GUI) related functions
 
 }
