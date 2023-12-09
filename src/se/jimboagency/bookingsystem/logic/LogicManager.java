@@ -1,5 +1,7 @@
 package se.jimboagency.bookingsystem.logic;
 
+import java.io.*;
+import java.nio.Buffer;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -90,6 +92,62 @@ public class LogicManager {
         } else {
             return false;
         }
+    }
+
+    public String generateBookingID(boolean updatable) {
+        String data = "";
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("bookingid.txt"));
+            data = reader.readLine();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String[] currentIDs = data.split(";", 2); // Removes ";" from "UP-XXXX;UN-XXXX
+        String value;
+
+        if(updatable){
+            value = currentIDs[0];
+        } else {
+            value = currentIDs[1];
+        }
+
+        String[] valueSplit = value.split("-", 2); // Removes "-" from "UP/UN-XXXX"
+        String valueNumber = valueSplit[1];
+        int valueNumberInt = Integer.parseInt(valueNumber);
+        int newValueInt = valueNumberInt + 1; // Adds +1 to currentID to increase counter
+        String newValue = Integer.toString(newValueInt);
+        String newID = valueSplit[0] + "-" + newValue; // Puts everything together again "UP/UN" + "-" + "XXXX+1)
+
+        if(updatable){
+            data = newID + ";" + currentIDs[1];
+        } else {
+            data = currentIDs[0] + ";" + newID;
+        }
+
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("bookingid.txt"));
+            writer.write(data);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return newID;
+    }
+
+    public String createBooking(boolean updatable, String flightNr, String passengerID, String name, int year, int week){
+        String bookingID = generateBookingID(updatable);
+
+        if(updatable){
+            Booking booking = new UpdatableBooking(); // Fix
+        } else {
+            Booking booking = new UnUpdatableBooking(); // Fix
+        }
+
+        return bookingID;
     }
 
     // (3) Remove Booking (Cancel Booking) related functions

@@ -148,8 +148,11 @@ public class UIManager {
             }
         }
 
-        // If all of this is correct -> Booking successfully created!
-        // Call createBooking() in logic
+        String bookingID = logic.createBooking(updatable, flightNr, passengerID, name, year, week); // Returns unique generated bookingID
+        System.out.println("Bokning skapad!");
+        System.out.println("Ditt resenummer är: " + bookingID);
+
+        logic.showBookings();
 
         show_menu();
     }
