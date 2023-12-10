@@ -29,16 +29,25 @@ public class UIManager {
         String choice = input.next();
 
         switch(choice) {
+            // Search for Bookings
+            case "1": {
+                searchBookings();
+                break;
+            }
+
+            // Create Booking
             case "2": {
                 createBooking();
                 break;
             }
 
+            // Remove Booking
             case "3": {
                 rmBooking();
                 break;
             }
 
+            // Create Flight
             case "5": {
                 createFlight();
                 break;
@@ -49,7 +58,17 @@ public class UIManager {
                 rmFlight();
                 break;
             }
+
+            // Exit Jimbo
+            case "8": {
+                exitJimbo();
+                break;
+            }
         }
+    }
+
+    public void searchBookings(){
+        System.out.println(name + " - " + matchQuantity + " found.")
     }
 
     public void createBooking(){
@@ -317,5 +336,10 @@ public class UIManager {
         logic.showBookings(); // Debug
 
         show_menu();
+    }
+
+    public void exitJimbo(){
+        // Add save functions (flights,bookings), write to .json file
+        System.exit(0);
     }
 }
