@@ -34,6 +34,11 @@ public class UIManager {
                 break;
             }
 
+            case "3": {
+                rmBooking();
+                break;
+            }
+
             case "5": {
                 createFlight();
                 break;
@@ -157,6 +162,28 @@ public class UIManager {
         show_menu();
     }
 
+    public void rmBooking(){
+        System.out.print("Resedokument-ID: ");
+        String bookingID;
+        while (true) {
+            bookingID = input.next();
+
+            if (this.logic.rmBooking(bookingID)) { // Bookings can also be deleted if the relating flight is deleted
+                break;
+            } else {
+                System.out.println("Angivet Resedokument-ID: " + bookingID + " finns ej.");
+                System.out.print("Försök igen: ");
+            }
+        }
+
+        System.out.println("DEBUG: SHOW FLIGHTS");
+        logic.showFlights(); // Debug
+        System.out.println("DEBUG: SHOW BOOKINGS");
+        logic.showBookings(); // Debug
+
+        show_menu();
+    }
+
     public void createFlight(){
         // Flight Number
         System.out.print("Flight-nummer: ");
@@ -217,7 +244,7 @@ public class UIManager {
 
         // Airline
         System.out.print("Flygbolag: ");
-        String airline = input.next(); // Pre-programmed from list of airlines (min 10)
+        String airline = input.next(); // Pre-programmed from list of airlines (minimum of 10 airlines)
         input.nextLine(); // Consume input
 
         // Seat specification
@@ -276,14 +303,18 @@ public class UIManager {
         while (true) {
             flightNr = input.next();
 
-            if (this.logic.removeFlight(flightNr)) { // Fix so that all related bookings are removed aswell
+            if (this.logic.rmFlight(flightNr)) { // All related bookings are also removed
                 break;
             } else {
                 System.out.println("Angivet Flight-nummer: " + flightNr + " finns ej.");
+                System.out.print("Försök igen: ");
             }
         }
 
+        System.out.println("DEBUG: SHOW FLIGHTS");
         logic.showFlights(); // Debug
+        System.out.println("DEBUG: SHOW BOOKINGS");
+        logic.showBookings(); // Debug
 
         show_menu();
     }

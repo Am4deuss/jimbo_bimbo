@@ -17,14 +17,12 @@ public class LogicManager {
     public LogicManager() {
         currentDate = LocalDate.now();
 
-        flights = new HashMap<String, Flight>();
+        flights = new HashMap<>();
         flights.put("AA-123", new Flight("AA-123","a","a","a","a","a","a","a"));
 
-        bookings = new HashMap<String, Booking>();
-        bookings.put("test1", new UpdatableBooking());
-        bookings.put("test2", new UnUpdatableBooking());
-
-        showBookings();
+        bookings = new HashMap<>();
+        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
     }
 
     // Error-management (ONLY FOR DEBUG)
@@ -140,17 +138,28 @@ public class LogicManager {
 
     public String createBooking(boolean updatable, String flightNr, String passengerID, String name, int year, int week){
         String bookingID = generateBookingID(updatable);
+        Booking booking;
 
         if(updatable){
-            Booking booking = new UpdatableBooking(); // Fix
+            booking = new UpdatableBooking(bookingID, flightNr, passengerID, name, year, week); // Fix
         } else {
-            Booking booking = new UnUpdatableBooking(); // Fix
+            booking = new UnUpdatableBooking(bookingID, flightNr, passengerID, name, year, week); // Fix
         }
+
+        bookings.put(bookingID, booking);
 
         return bookingID;
     }
 
     // (3) Remove Booking (Cancel Booking) related functions
+    public boolean rmBooking(String bookingID){
+        if(bookings.containsKey(bookingID)){
+            bookings.remove(bookingID);
+            return true;
+        } else{
+            return false;
+        }
+    }
 
     // (4) Update Booking related functions
 
@@ -179,7 +188,6 @@ public class LogicManager {
         return flightTime >= 1 && flightTime <= 18;
     }
 
-    // Checks if another flight has the same flight airline, departure city and arrival city
     public boolean createFlightCheck(String departureCity, String airline, String arrivalCity) {
         for(Map.Entry<String, Flight> entry : flights.entrySet()){
             Flight currentFlight = entry.getValue();
@@ -190,7 +198,7 @@ public class LogicManager {
             }
         }
         return true;
-    }
+    } // Checks if another flight has the same flight airline, departure city and arrival city
 
     public void createFlight(String flightNr, String departureCity, String time, String weekday, String arrivalCity, String airline, int seats, int flightTime){
         String seatsString = Integer.toString(seats);
@@ -200,9 +208,20 @@ public class LogicManager {
     }
 
     // (6) Remove Flight
-    public boolean removeFlight(String flightNr){
+    public boolean rmFlight(String flightNr){
+        List<String> bookingsToRemove = new ArrayList<>();
         if(flights.containsKey(flightNr)){
             flights.remove(flightNr);
+            for(Map.Entry<String, Booking> entry : bookings.entrySet()) { // Loops through every booking to check for bookings with the selected flightNr
+                Booking currentBooking =  entry.getValue();
+                if(Objects.equals(flightNr, currentBooking.getFlightNr())){
+                    System.out.println(currentBooking.getFlightNr());
+                    bookingsToRemove.add(entry.getKey()); // Adds the booking to a list if it contains the selected flightNr
+                }
+            }
+            for(String element : bookingsToRemove){
+                bookings.remove(element);
+            }
             return true;
         } else{
             return false;
