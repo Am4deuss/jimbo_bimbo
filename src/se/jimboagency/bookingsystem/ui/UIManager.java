@@ -59,6 +59,12 @@ public class UIManager {
                 break;
             }
 
+            // Statistics
+            case "7": {
+                stats();
+                break;
+            }
+
             // Exit Jimbo
             case "8": {
                 exitJimbo();
@@ -68,7 +74,7 @@ public class UIManager {
     }
 
     public void searchBookings(){
-        System.out.println(name + " - " + matchQuantity + " found.")
+        //System.out.println(name + " - " + matchQuantity + " found.")
     }
 
     public void createBooking(){
@@ -122,7 +128,7 @@ public class UIManager {
                 break;
             } else {
                 System.out.println("Fel format. Måste vara åtta siffror.");
-                System.out.println("Försök igen: ");
+                System.out.print("Försök igen: ");
                 input.nextLine(); // Consume the invalid input
             }
         }
@@ -336,6 +342,10 @@ public class UIManager {
         logic.showBookings(); // Debug
 
         show_menu();
+    }
+
+    public void stats(){
+        GUI gui = new GUI();
     }
 
     public void exitJimbo(){

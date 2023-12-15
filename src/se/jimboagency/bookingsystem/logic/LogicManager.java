@@ -86,7 +86,7 @@ public class LogicManager {
         int currentWeek = currentDate.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
 
         if(week > 0 && week <= 52 ){
-            return year == currentYear && week >= currentWeek || year > currentYear; // Returns true if input-year is equal (and input-week has not passed) or greater than the devices' current-year
+            return (year == currentYear && week >= currentWeek) || year > currentYear; // Returns true if input-year is equal (and input-week has not passed) or greater than the devices' current-year
         } else {
             return false;
         }
