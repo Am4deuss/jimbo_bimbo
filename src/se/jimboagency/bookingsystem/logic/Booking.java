@@ -18,8 +18,28 @@ public abstract class Booking {
         this.week = week;
     }
 
+    public String getBookingID() {
+        return bookingID;
+    }
+
     public String getFlightNr() {
         return flightNr;
+    }
+
+    public String getPassengerID() {
+        return passengerID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getWeek() {
+        return week;
     }
 
 }

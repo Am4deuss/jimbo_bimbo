@@ -345,7 +345,7 @@ public class UIManager {
     }
 
     public void stats(){
-        GUI gui = new GUI();
+        GUI gui = new GUI(this.logic);
     }
 
     public void exitJimbo(){

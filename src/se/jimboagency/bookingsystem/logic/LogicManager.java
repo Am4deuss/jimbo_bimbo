@@ -229,5 +229,26 @@ public class LogicManager {
     }
 
     // (7) Statistics (GUI) related functions
+    public ArrayList<String[]> findStats(String year, String week, boolean human){
+        ArrayList<String[]> results = new ArrayList<>();
+        int yearInt = Integer.parseInt(year);
+        int weekInt = Integer.parseInt(week);
+
+        if(human){
+            for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+                Booking currentBooking = entry.getValue();
+                String bookingID = currentBooking.getBookingID();
+                String flightNr = currentBooking.getFlightNr();
+                String departureCity = null; // get from flightNr
+                String arrivalCity = null; // combine with searchFlight time calc function to get weekday
+                int week2 = currentBooking.getWeek();
+                int year2 = currentBooking.getYear();
+                String flightTime = null; // combine with searchFlight time calc function
+
+                // Make if here to check if year and week checks out
+            }
+        }
+        return results;
+    }
 
 }
