@@ -79,11 +79,10 @@ public class UIManager {
 
     public void createBooking(){
         // Updatable booking?
-        System.out.print("Uppdateringsbar resa (y/n): ");
-        String updatableInput;
+        System.out.print("Uppdateringsbar resa (y/n) eller q för att avsluta: ");
+        String updatableInput = input.next();  // Handles several different synonyms of the same input (for example y, yes, j, ja)
         boolean updatable;
         while(true) {
-            updatableInput = input.next(); // Handles several different synonyms of the same input (for example y, yes, j, ja)
 
             if(Objects.equals(this.logic.updatableInputCheck(updatableInput), "t")) {
                 updatable = true;
@@ -96,6 +95,7 @@ public class UIManager {
                 System.out.print("Försök igen: ");
                 input.nextLine(); // Consume input
             }
+            updatableInput = input.next();
         }
 
         // Flight number
@@ -188,17 +188,17 @@ public class UIManager {
     }
 
     public void rmBooking(){
-        System.out.print("Resedokument-ID: ");
-        String bookingID;
-        while (true) {
-            bookingID = input.next();
+        System.out.print("Boknings-ID eller q för att gå tillbaka: ");
+        String bookingID = input.next();
 
+        while (!bookingID.equals("q")) {
             if (this.logic.rmBooking(bookingID)) { // Bookings can also be deleted if the relating flight is deleted
                 break;
             } else {
-                System.out.println("Angivet Resedokument-ID: " + bookingID + " finns ej.");
+                System.out.println("Angivet  Boknings-ID: " + bookingID + " finns ej.");
                 System.out.print("Försök igen: ");
             }
+            bookingID = input.next();
         }
 
         System.out.println("DEBUG: SHOW FLIGHTS");
@@ -323,10 +323,9 @@ public class UIManager {
     }
 
     public void rmFlight(){
-        System.out.print("Flight-nummer: ");
-        String flightNr;
-        while (true) {
-            flightNr = input.next();
+        System.out.print("Flight-nummer eller q för att avsluta: ");
+        String flightNr = input.next();
+        while (!flightNr.equals("q")) {
 
             if (this.logic.rmFlight(flightNr)) { // All related bookings are also removed
                 break;
@@ -334,6 +333,7 @@ public class UIManager {
                 System.out.println("Angivet Flight-nummer: " + flightNr + " finns ej.");
                 System.out.print("Försök igen: ");
             }
+            flightNr = input.next();
         }
 
         System.out.println("DEBUG: SHOW FLIGHTS");
