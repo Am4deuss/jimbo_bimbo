@@ -4,18 +4,18 @@ public abstract class Booking {
 
     protected String bookingID;
     protected String flightNr;
-    protected String passengerID;
-    protected String name;
+
+    protected Passenger passenger;
     protected int year;
     protected int week;
 
-    public Booking(String bookingID, String flightNr, String passengerID, String name, int year, int week){
+
+    public Booking(String bookingID, String flightNr, Passenger passenger, int year, int week){
         this.bookingID = bookingID;
         this.flightNr = flightNr;
-        this.passengerID = passengerID;
-        this.name = name;
         this.year = year;
         this.week = week;
+        this.passenger = passenger;
     }
 
     public String getBookingID() {
@@ -27,11 +27,11 @@ public abstract class Booking {
     }
 
     public String getPassengerID() {
-        return passengerID;
+        return this.passenger.getPassengerID();
     }
 
     public String getName() {
-        return name;
+        return this.passenger.getName();
     }
 
     public int getYear() {

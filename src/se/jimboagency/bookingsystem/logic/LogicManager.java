@@ -13,6 +13,7 @@ public class LogicManager {
     LocalDate currentDate;
     Map<String, Flight> flights;
     Map<String, Booking> bookings;
+    Map<String, Passenger> passengers;
     private Airline airline;
 
     // Constructor
@@ -25,8 +26,11 @@ public class LogicManager {
         flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
 
         bookings = new HashMap<>();
-        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
-        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", new Passenger("12345678", "Test Testsson"),  2024, 1));
+        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", new Passenger("12345678", "Test Testsson"), 2024, 1));
+
+        passengers = new HashMap<>();
+        passengers.put("12345678", new Passenger("12345678", "Test Testsson"));
     }
 
     // Error-management (ONLY FOR DEBUG)
@@ -43,6 +47,8 @@ public class LogicManager {
     }
 
     // (*) Functions used in several places
+
+
     public boolean flightnrCheck(String flightNr) {
         if(flights.containsKey(flightNr)){
             return false;
@@ -59,6 +65,17 @@ public class LogicManager {
     }
 
     // (1) Search for Booking related functions
+
+    public String getPassengerName(String passengerID){
+        String name;
+        try{
+           name = passengers.get(passengerID).getName();
+        }catch(Exception e){
+            name = "";
+        }
+        return name;
+    }
+
     //Takes personID and returns all bookings
     public ArrayList<Booking> searchBooking(String inputID){
         ArrayList<Booking> searchedBookings = new ArrayList<Booking>();
@@ -180,9 +197,9 @@ public class LogicManager {
         Booking booking;
 
         if(updatable){
-            booking = new UpdatableBooking(bookingID, flightNr, passengerID, name, year, week); // Fix
+            booking = new UpdatableBooking(bookingID, flightNr, new Passenger(passengerID, name), year, week); // Fix
         } else {
-            booking = new UnUpdatableBooking(bookingID, flightNr, passengerID, name, year, week); // Fix
+            booking = new UnUpdatableBooking(bookingID, flightNr, new Passenger(passengerID, name), year, week); // Fix
         }
 
         bookings.put(bookingID, booking);

@@ -78,13 +78,24 @@ public class UIManager {
 
     public void searchBookings(){
         //System.out.println(name + " - " + matchQuantity + " found.")
-        System.out.print("Skriv in personnr på passageraren eller q för att gå tillbaka:");
+        System.out.print("Skriv in personnr på passageraren eller q för att gå tillbaka: ");
         String searchPassenger = input.next();
-        String print;
-        ArrayList<String> result;
-        if(!searchPassenger.equals("q")){
-            System.out.println(this.logic.searchPrinter(this.logic.searchBooking(searchPassenger),this.logic.searchFlight(searchPassenger)));
+        ArrayList<String> result = this.logic.searchPrinter(this.logic.searchBooking(searchPassenger),this.logic.searchFlight(searchPassenger));
+        String name = this.logic.getPassengerName(searchPassenger);
+        if(!name.equals("")){
+            System.out.println(name + " - "+result.size()+" träff/-ar.");
+            System.out.println("===============================");
+            if(!searchPassenger.equals("q")){
+                for(String row: result){
+                    System.out.println(row + "\n");
+                }
+
+            }
+        }else{
+            System.out.println("Passageraren finns ej.");
         }
+
+
         show_menu();
 
     }
