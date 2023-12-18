@@ -1,9 +1,12 @@
 package se.jimboagency.bookingsystem.ui;
 
 // Class-import
+import se.jimboagency.bookingsystem.logic.Booking;
+import se.jimboagency.bookingsystem.logic.Flight;
 import se.jimboagency.bookingsystem.logic.LogicManager;
 
 // Library-import
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
@@ -75,8 +78,17 @@ public class UIManager {
 
     public void searchBookings(){
         //System.out.println(name + " - " + matchQuantity + " found.")
-    }
+        System.out.print("Skriv in personnr på passageraren eller q för att gå tillbaka:");
+        String searchPassenger = input.next();
+        String print;
+        ArrayList<String> result;
+        if(!searchPassenger.equals("q")){
 
+            System.out.println(this.logic.searchPrinter(this.logic.searchBooking(searchPassenger),this.logic.searchFlight(searchPassenger)));
+        }
+        show_menu();
+
+    }
     public void createBooking(){
         // Updatable booking?
         System.out.print("Uppdateringsbar resa (y/n) eller q för att avsluta: ");

@@ -1,5 +1,6 @@
 package se.jimboagency.bookingsystem.logic;
 
+import java.awt.print.Book;
 import java.io.*;
 import java.nio.Buffer;
 import java.time.LocalDate;
@@ -18,11 +19,11 @@ public class LogicManager {
         currentDate = LocalDate.now();
 
         flights = new HashMap<>();
-        flights.put("AA-123", new Flight("AA-123","a","a","a","a","a","a","a"));
+        //flights.put("AA-123", new Flight("AA-123","a","a","a","a","a","a","a"));
 
         bookings = new HashMap<>();
-        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
-        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        //bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        //bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
     }
 
     // Error-management (ONLY FOR DEBUG)
@@ -55,6 +56,40 @@ public class LogicManager {
     }
 
     // (1) Search for Booking related functions
+
+    //Takes personID and returns all
+    public ArrayList<Booking> searchBooking(String inputID){
+        ArrayList<Booking> searchedBookings = new ArrayList<Booking>();
+        for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+            Booking currentBooking = entry.getValue();
+
+            if(currentBooking.getPassengerID().equals(inputID)){
+                searchedBookings.add(entry.getValue());
+            }
+        }
+        return searchedBookings;
+    }
+
+    //Takes a personID and returns all flights
+    public ArrayList<Flight> searchFlight(String inputID){
+        ArrayList<Flight> searchedFlights = new ArrayList<Flight>();
+        for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+            Booking currentBooking = entry.getValue();
+            if(currentBooking.getPassengerID().equals(inputID)){;
+                searchedFlights.add(flights.get(currentBooking.getFlightNr()));
+            }
+        }
+        return searchedFlights;
+    }
+    public ArrayList<String> searchPrinter(ArrayList<Booking> bookingList, ArrayList<Flight> flightList){
+        ArrayList<String> print = new ArrayList<String>();
+        for(Booking currentBooking : bookingList) {
+            Flight currentFlight = flights.get(currentBooking.getFlightNr());
+            print.add(currentBooking.getBookingID() + " - " + currentBooking.getFlightNr() + " - " + currentFlight.getDepartureCity()+"("+currentFlight.getDepDay()+")" + " - " + currentFlight.getArrivalCity() +"("+currentFlight.getArvDay()+")"+ " - " + currentBooking.getWeek() + " - " +currentBooking.getYear() + " - " + currentFlight.getDepTime() + " - "+ currentFlight.getArvTime());
+
+        }
+        return print;
+    }
 
     // (2) Create Booking related functions
     public String updatableInputCheck(String updatable) {
@@ -176,9 +211,10 @@ public class LogicManager {
     }
 
     public boolean weekdayCheck(String weekday){
-        String[] weekdays = {"monday", "måndag", "tuesday", "tisdag", "wednesday", "onsdag", "thursday", "torsdag", "friday", "fredag", "saturday", "lördag", "sunday", "söndag"};
+        String[] weekdays = {"måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"};
         return Arrays.asList(weekdays).contains(weekday.toLowerCase());
     }
+
 
     public boolean seatCheck(int seats) {
         return (seats >= 80) && (seats <= 380);

@@ -1,5 +1,9 @@
 package se.jimboagency.bookingsystem.logic;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+
 public class Flight {
 
     private String flightNr;
@@ -34,4 +38,46 @@ public class Flight {
     public String getArrivalCity(){
         return arrivalCity;
     }
+
+    public String getDepTime(){
+        return time;
+    }
+    public String getArvTime(){
+        String[] splitTime = time.split(":");
+        LocalTime localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        LocalTime updatedTime = localTime.plusHours(Integer.parseInt(flightTime));
+        return updatedTime.toString();
+    }
+    public String getDepDay(){
+        return date;
+    }
+    public String getArvDay(){
+        boolean newDate = false;
+
+        String[] splitTime = time.split(":");
+        int newTime = Integer.parseInt(splitTime[0]) + Integer.parseInt(flightTime);
+
+        if(newTime > 23){
+            newDate = true;
+        }
+
+        if(newDate){
+            String[] weekdays = {"måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"};
+
+            int index = Arrays.binarySearch(weekdays, date.toLowerCase());
+
+            if(index > 6) {
+                index = 0;
+            } else {
+                index++;
+            }
+
+            return weekdays[0];
+        }
+
+        return date;
+    }
+
+
+
 }
