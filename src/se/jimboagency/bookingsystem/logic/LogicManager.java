@@ -13,10 +13,13 @@ public class LogicManager {
     LocalDate currentDate;
     Map<String, Flight> flights;
     Map<String, Booking> bookings;
+    private Airline airline;
 
     // Constructor
     public LogicManager() {
         currentDate = LocalDate.now();
+
+        airline = new Airline();
 
         flights = new HashMap<>();
         flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
@@ -215,6 +218,9 @@ public class LogicManager {
         String[] weekdays = {"måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"};
         return Arrays.asList(weekdays).contains(weekday.toLowerCase());
     }
+    public boolean airlineCheck(String airline){
+        return this.airline.checkAirline(airline);
+    }
 
     public boolean seatCheck(int seats) {
         return (seats >= 80) && (seats <= 380);
@@ -242,6 +248,8 @@ public class LogicManager {
         Flight flight = new Flight(flightNr, departureCity, time, weekday, arrivalCity, airline, seatsString, flightTimeString);
         flights.put(flightNr, flight);
     }
+
+
 
     // (6) Remove Flight
     public boolean rmFlight(String flightNr){

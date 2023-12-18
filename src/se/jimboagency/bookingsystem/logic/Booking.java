@@ -2,12 +2,12 @@ package se.jimboagency.bookingsystem.logic;
 
 public abstract class Booking {
 
-    private String bookingID;
-    private String flightNr;
-    private String passengerID;
-    private String name;
-    private int year;
-    private int week;
+    protected String bookingID;
+    protected String flightNr;
+    protected String passengerID;
+    protected String name;
+    protected int year;
+    protected int week;
 
     public Booking(String bookingID, String flightNr, String passengerID, String name, int year, int week){
         this.bookingID = bookingID;

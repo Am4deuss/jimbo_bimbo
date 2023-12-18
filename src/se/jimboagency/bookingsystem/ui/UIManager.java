@@ -282,6 +282,15 @@ public class UIManager {
         // Airline
         System.out.print("Flygbolag: ");
         String airline = input.next(); // Pre-programmed from list of airlines (minimum of 10 airlines)
+        while(true){
+            if(this.logic.airlineCheck(airline)){
+                break;
+            }   else{
+                System.out.println("Ogiltigt flygbolag.");
+                System.out.print("Försök igen: ");
+            }
+            airline = input.next();
+        }
         input.nextLine(); // Consume input
 
         // Seat specification
