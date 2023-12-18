@@ -42,15 +42,18 @@ public class Flight {
     public String getDepTime(){
         return time;
     }
+
     public String getArvTime(){
         String[] splitTime = time.split(":");
         LocalTime localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
         LocalTime updatedTime = localTime.plusHours(Integer.parseInt(flightTime));
         return updatedTime.toString();
     }
+
     public String getDepDay(){
         return date;
     }
+
     public String getArvDay(){
         boolean newDate = false;
 
@@ -77,7 +80,5 @@ public class Flight {
 
         return date;
     }
-
-
 
 }

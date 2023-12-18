@@ -83,12 +83,12 @@ public class UIManager {
         String print;
         ArrayList<String> result;
         if(!searchPassenger.equals("q")){
-
             System.out.println(this.logic.searchPrinter(this.logic.searchBooking(searchPassenger),this.logic.searchFlight(searchPassenger)));
         }
         show_menu();
 
     }
+
     public void createBooking(){
         // Updatable booking?
         System.out.print("Uppdateringsbar resa (y/n) eller q för att avsluta: ");
@@ -358,6 +358,7 @@ public class UIManager {
 
     public void stats(){
         GUI gui = new GUI(this.logic);
+        show_menu();
     }
 
     public void exitJimbo(){

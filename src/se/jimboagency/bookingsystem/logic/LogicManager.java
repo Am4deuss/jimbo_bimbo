@@ -19,11 +19,11 @@ public class LogicManager {
         currentDate = LocalDate.now();
 
         flights = new HashMap<>();
-        //flights.put("AA-123", new Flight("AA-123","a","a","a","a","a","a","a"));
+        flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
 
         bookings = new HashMap<>();
-        //bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
-        //bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
+        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", "12345678", "Test Testsson", 2024, 1));
     }
 
     // Error-management (ONLY FOR DEBUG)
@@ -56,8 +56,7 @@ public class LogicManager {
     }
 
     // (1) Search for Booking related functions
-
-    //Takes personID and returns all
+    //Takes personID and returns all bookings
     public ArrayList<Booking> searchBooking(String inputID){
         ArrayList<Booking> searchedBookings = new ArrayList<Booking>();
         for(Map.Entry<String, Booking> entry : bookings.entrySet()){
@@ -81,6 +80,8 @@ public class LogicManager {
         }
         return searchedFlights;
     }
+
+    // Returns array for UIManager-functions: searchBookings() and stats()
     public ArrayList<String> searchPrinter(ArrayList<Booking> bookingList, ArrayList<Flight> flightList){
         ArrayList<String> print = new ArrayList<String>();
         for(Booking currentBooking : bookingList) {
@@ -215,7 +216,6 @@ public class LogicManager {
         return Arrays.asList(weekdays).contains(weekday.toLowerCase());
     }
 
-
     public boolean seatCheck(int seats) {
         return (seats >= 80) && (seats <= 380);
     }
@@ -265,26 +265,41 @@ public class LogicManager {
     }
 
     // (7) Statistics (GUI) related functions
-    public ArrayList<String[]> findStats(String year, String week, boolean human){
-        ArrayList<String[]> results = new ArrayList<>();
+    public ArrayList<String> findStats(String year, String week, boolean human){
+        ArrayList<String> results = new ArrayList<>();
         int yearInt = Integer.parseInt(year);
         int weekInt = Integer.parseInt(week);
 
         if(human){
-            for(Map.Entry<String, Booking> entry : bookings.entrySet()){
-                Booking currentBooking = entry.getValue();
-                String bookingID = currentBooking.getBookingID();
-                String flightNr = currentBooking.getFlightNr();
-                String departureCity = null; // get from flightNr
-                String arrivalCity = null; // combine with searchFlight time calc function to get weekday
-                int week2 = currentBooking.getWeek();
-                int year2 = currentBooking.getYear();
-                String flightTime = null; // combine with searchFlight time calc function
+            results = searchPrinter(searchBookingStats(yearInt, weekInt), searchFlightStats(yearInt, weekInt));
+        }
 
-                // Make if here to check if year and week checks out
+        return results;
+    }
+
+    public ArrayList<Booking> searchBookingStats(int year, int week){
+        ArrayList<Booking> searchedBookings = new ArrayList<>();
+        for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+            Booking currentBooking = entry.getValue();
+            int currentYear = currentBooking.getYear();
+            int currentWeek = currentBooking.getWeek();
+
+            if((currentYear == year) && (currentWeek == week)){
+                searchedBookings.add(entry.getValue());
             }
         }
-        return results;
+        return searchedBookings;
+    }
+
+    public ArrayList<Flight> searchFlightStats(int year, int week){
+        ArrayList<Flight> searchedFlights = new ArrayList<>();
+        for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+            Booking currentBooking = entry.getValue();
+            if((currentBooking.getWeek() == week) && (currentBooking.getYear() == year)){;
+                searchedFlights.add(flights.get(currentBooking.getFlightNr()));
+            }
+        }
+        return searchedFlights;
     }
 
 }
