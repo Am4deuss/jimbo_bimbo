@@ -1,7 +1,7 @@
 package se.jimboagency.bookingsystem.logic;
 
 public class Passenger {
-    private  String name;
+    private String name;
     private String passengerID;
 
     public Passenger(String passengerID, String name) {
@@ -10,16 +10,16 @@ public class Passenger {
     }
 
     public String getName(){
-        return this.name;
+        return name;
     }
     public String getPassengerID(){
         return this.passengerID;
     }
     public void setName(String newName){
-        this.name = newName;
+        name = newName;
     }
 
     public void setPassengerID(String newPassengerID){
-        this.passengerID = newPassengerID;
+        passengerID = newPassengerID;
     }
 }

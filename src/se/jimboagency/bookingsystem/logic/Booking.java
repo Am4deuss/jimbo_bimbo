@@ -4,7 +4,6 @@ public abstract class Booking {
 
     protected String bookingID;
     protected String flightNr;
-
     protected Passenger passenger;
     protected int year;
     protected int week;

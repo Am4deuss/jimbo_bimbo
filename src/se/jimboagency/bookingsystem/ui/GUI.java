@@ -11,43 +11,42 @@ import java.util.ArrayList;
 public class GUI extends JFrame implements ActionListener {
 
     private LogicManager logic;
-    JLabel year;
-    JTextField yearText;
-    JLabel week;
-    JTextField weekText;
-    JButton button;
-    JCheckBox checkBox;
-
-    JTextArea textArea;
-    ArrayList<String> results;
+    private JLabel year;
+    private JTextField yearText;
+    private JLabel week;
+    private JTextField weekText;
+    private JButton button;
+    private JCheckBox checkBox;
+    private JTextArea textArea;
+    private ArrayList<String> results;
 
     public GUI(LogicManager logic){
         this.logic = logic;
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // x blir exit application och terminate
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // x blir exit application och inte terminatar program
         this.setTitle("Statistics"); // Sätter titel på program
-        this.setLayout(new FlowLayout());
-        this.setResizable(false); // Hindrar resize
+        this.setLayout(new FlowLayout()); // Gör så saker positionerar sig bättre
+        this.setResizable(false); // Hindrar resize av window
         this.setSize(200,750); // Definierar x och y dimesioner för this (Pixlar)
 
-        year = new JLabel("År");
-        yearText = new JTextField();
+        year = new JLabel("År"); // Sätter text "År"
+        yearText = new JTextField(); // Sätter inmatningsfält för år
         yearText.setPreferredSize(new Dimension(250,20));
 
-        week = new JLabel("Vecka");
-        weekText = new JTextField();
+        week = new JLabel("Vecka"); // Sätter text "Vecka"
+        weekText = new JTextField(); // Sätter inmatningsfält för vecka
         weekText.setPreferredSize(new Dimension(250,20));
 
 
-        button = new JButton("Sök");
-        button.addActionListener(this);
+        button = new JButton("Sök"); // Skapar en sök knapp
+        button.addActionListener(this); // Lägger till funktion till knappen
 
-        checkBox = new JCheckBox();
-        checkBox.setText("Jag är inte en robot");
+        checkBox = new JCheckBox(); // Legit en checkbox
+        checkBox.setText("Jag är inte en robbot"); // "Jag är inte en robbot" ~ Helmer 2023 ;) plz bli inte arga på oss
         checkBox.setFocusable(false);
 
-        textArea = new JTextArea(20, 80);
+        textArea = new JTextArea(20, 80); // Där bokningar visas upp
 
-
+        // Lägger till allt på skärmen
         this.add(year);
         this.add(yearText);
         this.add(week);
@@ -64,7 +63,7 @@ public class GUI extends JFrame implements ActionListener {
         if(a.getSource() == button){
             try{
                 results = this.logic.findStats(yearText.getText(), weekText.getText(), checkBox.isSelected());
-                textArea.setText("");
+                textArea.setText(""); // Clearar sökytan för varje submit
                 if(results.size() < 1){
                     textArea.setText("Hittade inga bokningar med angivet år och vecka.");
                 } else {
@@ -74,7 +73,7 @@ public class GUI extends JFrame implements ActionListener {
                 }
             }
             catch (Exception e){
-                textArea.setText("Fel.");
+                textArea.setText("Fel format.");
             }
         }
     }

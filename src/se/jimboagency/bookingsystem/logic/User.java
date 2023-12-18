@@ -1,4 +1,4 @@
-package se.jimboagency.bookingsystem;
+package se.jimboagency.bookingsystem.logic;
 
 public class User {
     private String userName;

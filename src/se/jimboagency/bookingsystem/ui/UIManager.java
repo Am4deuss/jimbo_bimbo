@@ -1,8 +1,6 @@
 package se.jimboagency.bookingsystem.ui;
 
 // Class-import
-import se.jimboagency.bookingsystem.logic.Booking;
-import se.jimboagency.bookingsystem.logic.Flight;
 import se.jimboagency.bookingsystem.logic.LogicManager;
 
 // Library-import
@@ -25,6 +23,8 @@ public class UIManager {
     public void show_menu() {
         if(this.logic.authCheck(args)){
             String[] options = {"Sök resa", "Boka resa", "Avboka resa", "Uppdatera resa", "Skapa flight", "Ta bort flight", "Statistik", "Avsluta"};
+
+            System.out.println("Hej och välkommen " + this.logic.getUsername());
 
             System.out.println("=================");
             for(int i = 0; i < options.length; i++) {
@@ -168,11 +168,11 @@ public class UIManager {
                 input.nextLine(); // Consume the invalid input
             }
         }
+        input.nextLine(); // Consume the invalid input
 
         // Name (Firstname, Lastname)
         System.out.print("Namn (för och efternamn): ");
-        String name = input.next();
-        input.nextLine(); // Consume input
+        String name = input.nextLine();
 
         // Year
         System.out.print("År: ");
@@ -203,7 +203,7 @@ public class UIManager {
                 if(this.logic.weekCheck(week, year)){
                     break;
                 } else {
-                    System.out.println("Fel, veckan har passerat. Ange giltig vecka.");
+                    System.out.println("Fel, ogiltig vecka. Ange giltig vecka.");
                     System.out.print("Försök igen: ");
                     input.nextLine(); // Consume the invalid input
                 }
@@ -217,8 +217,6 @@ public class UIManager {
         String bookingID = logic.createBooking(updatable, flightNr, passengerID, name, year, week); // Returns unique generated bookingID
         System.out.println("Bokning skapad!");
         System.out.println("Ditt resenummer är: " + bookingID);
-
-        logic.showBookings();
 
         show_menu();
     }
@@ -237,17 +235,13 @@ public class UIManager {
             bookingID = input.next();
         }
 
-        System.out.println("DEBUG: SHOW FLIGHTS");
-        logic.showFlights(); // Debug
-        System.out.println("DEBUG: SHOW BOOKINGS");
-        logic.showBookings(); // Debug
-
         show_menu();
     }
 
     public void updateBooking(){
         System.out.print("Boknings-ID eller q för att gå tillbaka: ");
         String bookingID = input.next();
+        input.nextLine(); // Consume the invalid input
         String newName;
         String oldPassengerID;
         String newPassengerID;
@@ -256,8 +250,7 @@ public class UIManager {
             while (!bookingID.equals("q")) {
 
                 System.out.print("Skriv in det nya namnet: ");
-                newName = input.next();
-                input.nextLine(); // Consume input
+                newName = input.nextLine();
 
 
                 // Old passenger-ID
@@ -292,6 +285,7 @@ public class UIManager {
        }
        show_menu();
     }
+
     public void createFlight(){
         // Flight Number
         System.out.print("Flight-nummer: ");
@@ -409,8 +403,6 @@ public class UIManager {
             System.out.println("Error: Ett annat flyg har samma flygbolag, avgångsstad och ankomststad.");
         }
 
-        logic.showFlights(); // Debug
-
         show_menu();
     }
 
@@ -427,11 +419,6 @@ public class UIManager {
             }
             flightNr = input.next();
         }
-
-        System.out.println("DEBUG: SHOW FLIGHTS");
-        logic.showFlights(); // Debug
-        System.out.println("DEBUG: SHOW BOOKINGS");
-        logic.showBookings(); // Debug
 
         show_menu();
     }
