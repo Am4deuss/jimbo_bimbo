@@ -1,5 +1,7 @@
 package se.jimboagency.bookingsystem.logic;
 
+import se.jimboagency.bookingsystem.User;
+
 import java.awt.print.Book;
 import java.io.*;
 import java.nio.Buffer;
@@ -10,14 +12,22 @@ import java.util.regex.Pattern;
 
 public class LogicManager {
 
-    LocalDate currentDate;
-    Map<String, Flight> flights;
-    Map<String, Booking> bookings;
-    Map<String, Passenger> passengers;
+    private Map<String, User> employees;
+    private LocalDate currentDate;
+    private Map<String, Flight> flights;
+    private Map<String, Booking> bookings;
+    private Map<String, Passenger> passengers;
     private Airline airline;
 
     // Constructor
     public LogicManager() {
+        employees = new HashMap<>();
+        employees.put("shipa001", new User("shipa001", "Shima Parsson", "3eff43"));
+        employees.put("Ennpe001", new User("Ennpe001", "Ennia Pettersson", "wedr5t"));
+        employees.put("julno001", new User("julno001", "Julia Noor", "wwr4r3"));
+        employees.put("johni001", new User("johni001", "Johan Karlsson", "lk9h6d"));
+        employees.put("adabe001", new User("adab001", "Adam Bergquvist", "0o3u33"));
+
         currentDate = LocalDate.now();
 
         airline = new Airline();
@@ -48,6 +58,26 @@ public class LogicManager {
 
     // (*) Functions used in several places
 
+    public boolean authCheck(String[] args){
+        String username = "";
+        String password = "";
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-u") && i + 1 < args.length) {
+                username = args[i + 1];
+                i++; // Move to the next argument
+            } else if (args[i].equals("-p") && i + 1 < args.length) {
+                password = args[i + 1];
+                i++; // Move to the next argument
+            }
+        }
+        if(employees.get(username).getPassword(password)){
+
+            return true;
+        }
+        return false;
+    }
+
 
     public boolean flightnrCheck(String flightNr) {
         if(flights.containsKey(flightNr)){
@@ -76,13 +106,15 @@ public class LogicManager {
         return name;
     }
 
+
     //Takes personID and returns all bookings
     public ArrayList<Booking> searchBooking(String inputID){
         ArrayList<Booking> searchedBookings = new ArrayList<Booking>();
+
         for(Map.Entry<String, Booking> entry : bookings.entrySet()){
             Booking currentBooking = entry.getValue();
 
-            if(currentBooking.getPassengerID().equals(inputID)){
+            if(currentBooking.passenger.getPassengerID().equals(inputID)){
                 searchedBookings.add(entry.getValue());
             }
         }
@@ -94,7 +126,7 @@ public class LogicManager {
         ArrayList<Flight> searchedFlights = new ArrayList<Flight>();
         for(Map.Entry<String, Booking> entry : bookings.entrySet()){
             Booking currentBooking = entry.getValue();
-            if(currentBooking.getPassengerID().equals(inputID)){;
+            if(currentBooking.passenger.getPassengerID().equals(inputID)){;
                 searchedFlights.add(flights.get(currentBooking.getFlightNr()));
             }
         }
@@ -106,7 +138,7 @@ public class LogicManager {
         ArrayList<String> print = new ArrayList<String>();
         for(Booking currentBooking : bookingList) {
             Flight currentFlight = flights.get(currentBooking.getFlightNr());
-            print.add(currentBooking.getBookingID() + " - " + currentBooking.getFlightNr() + " - " + currentFlight.getDepartureCity()+"("+currentFlight.getDepDay()+")" + " - " + currentFlight.getArrivalCity() +"("+currentFlight.getArvDay()+")"+ " - " + currentBooking.getWeek() + " - " +currentBooking.getYear() + " - " + currentFlight.getDepTime() + " - "+ currentFlight.getArvTime());
+            print.add(currentBooking.getBookingID() + " - " + currentBooking.getFlightNr() + " - " + currentFlight.getDepartureCity() + "(" + currentFlight.getDepDay() + ")" + " - " + currentFlight.getArrivalCity() + "(" + currentFlight.getArvDay() + ")" + " - " + currentBooking.getWeek() + " - " + currentBooking.getYear() + " - " + currentFlight.getDepTime() + " - " + currentFlight.getArvTime());
 
         }
         return print;
@@ -203,6 +235,10 @@ public class LogicManager {
         }
 
         bookings.put(bookingID, booking);
+        if(!passengers.containsKey(passengerID)){
+          passengers.put(passengerID, new Passenger(passengerID,name));
+        }
+
 
         return bookingID;
     }
@@ -218,6 +254,22 @@ public class LogicManager {
     }
 
     // (4) Update Booking related functions
+    public void updateBooking(String bookingID, String oldPassengerID, String newPassengerID, String newName){
+            bookings.get(bookingID).passenger.setPassengerID(newPassengerID);
+            bookings.get(bookingID).passenger.setName(newName);
+
+            //If the updated booking contains a new passenger, this passenger is added.
+            if(!passengers.containsKey(newPassengerID)){
+              passengers.put(newPassengerID, new Passenger(newPassengerID,newName));
+    }       }
+    public boolean updatebleCheck(String bookingID){                                   1
+       if(bookings.containsKey(bookingID)){
+           if(bookingID.charAt(1) == 'P'){
+                return true;
+           }
+       }
+       return false;
+    }
 
     // (5) Create Flight related functions
     public boolean timePatternCheck(String time){

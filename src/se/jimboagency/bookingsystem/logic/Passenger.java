@@ -19,7 +19,7 @@ public class Passenger {
         this.name = newName;
     }
 
-    public void setPassengerID(String passengerID){
-        this.passengerID = passengerID;
+    public void setPassengerID(String newPassengerID){
+        this.passengerID = newPassengerID;
     }
 }

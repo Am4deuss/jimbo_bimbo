@@ -6,9 +6,11 @@ import se.jimboagency.bookingsystem.logic.LogicManager;
 public class Jimbo {
 
     public static void main(String[] args) {
+
         LogicManager logic = new LogicManager();
-        UIManager ui = new UIManager(logic);
+        UIManager ui = new UIManager(logic,args);
         ui.show_menu();
+
     }
 
 }

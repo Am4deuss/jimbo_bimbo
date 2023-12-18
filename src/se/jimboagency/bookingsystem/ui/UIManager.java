@@ -12,68 +12,81 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class UIManager {
+    private  String[] args;
     private Scanner input;
     private LogicManager logic;
 
-    public UIManager(LogicManager logic) {
+    public UIManager(LogicManager logic, String[] args) {
         input = new Scanner(System.in);
         this.logic = logic;
+        this.args = args;
     }
 
     public void show_menu() {
-        //if(auth()) {
-        String[] options = {"Sök resa", "Boka resa", "Avboka resa", "Uppdatera resa", "Skapa flight", "Ta bort flight", "Statistik", "Avsluta"};
+        if(this.logic.authCheck(args)){
+            String[] options = {"Sök resa", "Boka resa", "Avboka resa", "Uppdatera resa", "Skapa flight", "Ta bort flight", "Statistik", "Avsluta"};
 
-        System.out.println("=================");
-        for(int i = 0; i < options.length; i++) {
-            System.out.println((i + 1) + ". " + options[i]);
+            System.out.println("=================");
+            for(int i = 0; i < options.length; i++) {
+                System.out.println((i + 1) + ". " + options[i]);
+            }
+            System.out.print("========│ val: ");
+            String choice = input.next();
+
+            switch(choice) {
+                // Search for Bookings
+                case "1": {
+                    searchBookings();
+                    break;
+                }
+
+                // Create Booking
+                case "2": {
+                    createBooking();
+                    break;
+                }
+
+                // Remove Booking
+                case "3": {
+                    rmBooking();
+                    break;
+                }
+
+                //Update Booking
+                case "4": {
+                    updateBooking();
+                    break;
+                }
+
+                // Create Flight
+                case "5": {
+                    createFlight();
+                    break;
+                }
+
+                // Remove Flight
+                case "6": {
+                    rmFlight();
+                    break;
+                }
+
+                // Statistics
+                case "7": {
+                    stats();
+                    break;
+                }
+
+                // Exit Jimbo
+                case "8": {
+                    exitJimbo();
+                    break;
+                }
+            }
+        }else{
+            System.out.println("Felaktig inmatning.");
+            exitJimbo();
         }
-        System.out.print("========│ val: ");
-        String choice = input.next();
 
-        switch(choice) {
-            // Search for Bookings
-            case "1": {
-                searchBookings();
-                break;
-            }
-
-            // Create Booking
-            case "2": {
-                createBooking();
-                break;
-            }
-
-            // Remove Booking
-            case "3": {
-                rmBooking();
-                break;
-            }
-
-            // Create Flight
-            case "5": {
-                createFlight();
-                break;
-            }
-
-            // Remove Flight
-            case "6": {
-                rmFlight();
-                break;
-            }
-
-            // Statistics
-            case "7": {
-                stats();
-                break;
-            }
-
-            // Exit Jimbo
-            case "8": {
-                exitJimbo();
-                break;
-            }
-        }
     }
 
     public void searchBookings(){
@@ -232,6 +245,53 @@ public class UIManager {
         show_menu();
     }
 
+    public void updateBooking(){
+        System.out.print("Boknings-ID eller q för att gå tillbaka: ");
+        String bookingID = input.next();
+        String newName;
+        String oldPassengerID;
+        String newPassengerID;
+        
+       if(this.logic.updatebleCheck(bookingID))
+            while (!bookingID.equals("q")) {
+
+                System.out.print("Skriv in det nya namnet: ");
+                newName = input.next();
+                input.nextLine(); // Consume input
+
+
+                // Old passenger-ID
+                System.out.print("Gammalt passagerar-ID: ");
+                while (true) {
+                    oldPassengerID = input.next(); // REGEX "12345678" (Numbers 0-9)
+                    if (this.logic.passengerIDCheck(oldPassengerID)) {
+                        break;
+                    } else {
+                        System.out.println("Fel format. Måste vara åtta siffror.");
+                        System.out.print("Försök igen: ");
+                        input.nextLine(); // Consume the invalid input
+                    }
+                }
+                // Nytt passenger-ID
+                System.out.print("Nytt passagerar-ID: ");
+                while (true) {
+                    newPassengerID = input.next(); // REGEX "12345678" (Numbers 0-9)
+                    if (this.logic.passengerIDCheck(newPassengerID)) {
+                        break;
+                    } else {
+                        System.out.println("Fel format. Måste vara åtta siffror.");
+                        System.out.print("Försök igen: ");
+                        input.nextLine(); // Consume the invalid input
+                    }
+                }
+                this.logic.updateBooking(bookingID, oldPassengerID, newPassengerID, newName);
+                break;
+            }
+       else{
+            System.out.println("Hittade inte uppdateringsbar bokning.");
+       }
+       show_menu();
+    }
     public void createFlight(){
         // Flight Number
         System.out.print("Flight-nummer: ");
@@ -383,6 +443,7 @@ public class UIManager {
 
     public void exitJimbo(){
         // Add save functions (flights,bookings), write to .json file
+        System.out.print("hejdÅ");
         System.exit(0);
     }
 }

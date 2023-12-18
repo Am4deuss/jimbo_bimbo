@@ -9,11 +9,5 @@ public class UpdatableBooking extends Booking {
 
     }
 
-    public void setNewName(String newName){
-        this.passenger.setName(newName);
-    }
-    public void setNewPassengerID(String newPassengerID){
-        this.passenger.setPassengerID(newPassengerID);
-    }
 
 }
