@@ -1,6 +1,9 @@
 package se.jimboagency.bookingsystem.logic;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -38,15 +41,15 @@ public class LogicManager {
 
         airline = new Airline();
 
-        /*flights = new HashMap<>();
-        flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
+        //flights = new HashMap<>();
+        //flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
 
-        bookings = new HashMap<>();
-        bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", new Passenger("12345678", "Test Testsson"),  2024, 1));
-        bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", new Passenger("12345678", "Test Testsson"), 2024, 1));
+        //bookings = new HashMap<>();
+        //bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", new Passenger("12345678", "Test Testsson"),  2024, 1));
+        //bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", new Passenger("12345678", "Test Testsson"), 2024, 1));
 
-        passengers = new HashMap<>();
-        passengers.put("12345678", new Passenger("12345678", "Test Testsson"));^*/
+        //passengers = new HashMap<>();
+        //passengers.put("12345678", new Passenger("12345678", "Test Testsson"));
 
         loadFromJson();
         saveToJson();
@@ -55,9 +58,11 @@ public class LogicManager {
     // Error-management + Save to .json
     public void saveToJson(){
 
-        String jsonFlights = new Gson().toJson(flights);
-        String jsonBookings = new Gson().toJson(bookings);
-        String jsonPassengers = new Gson().toJson(passengers);
+        Gson gson = new Gson()
+
+        String jsonFlights = gson.toJson(flights);
+        String jsonBookings = gson.toJson(bookings);
+        String jsonPassengers = gson.toJson(passengers);
 
         try {
             BufferedWriter writerFlights = new BufferedWriter(new FileWriter(filepathFlights));
@@ -99,9 +104,15 @@ public class LogicManager {
             e.printStackTrace();
         }
 
-        flights = new Gson().fromJson(dataFlightsJson, HashMap.class);
-        bookings = new Gson().fromJson(dataBookingsJson, HashMap.class);
-        passengers = new Gson().fromJson(dataPassengersJson, HashMap.class);
+        Gson gson = new Gson();
+
+        Type flightType = new TypeToken<Map<String, Flight>>() {}.getType();
+        Type bookingType = new TypeToken<Map<String, UpdatableBooking>>() {}.getType();
+        Type passengerType = new TypeToken<Map<String, Passenger>>() {}.getType();
+
+        flights = gson.fromJson(dataFlightsJson, flightType);
+        bookings = gson.fromJson(dataBookingsJson, bookingType);
+        passengers = gson.fromJson(dataPassengersJson, passengerType);
     }
 
     // (*) Functions used in several places
@@ -295,6 +306,7 @@ public class LogicManager {
           passengers.put(passengerID, new Passenger(passengerID, name));
         }
 
+        saveToJson();
 
         return bookingID;
     }
@@ -316,6 +328,9 @@ public class LogicManager {
             if(check == 0){
                 passengers.remove(oldPassengerID);
             }
+
+            saveToJson();
+
             return true;
         } else{
             return false;
@@ -323,25 +338,29 @@ public class LogicManager {
     }
 
     // (4) Update Booking related functions
-    public void updateBooking(String bookingID, String oldPassengerID, String newPassengerID, String newName){
-            bookings.get(bookingID).passenger.setPassengerID(newPassengerID);
-            bookings.get(bookingID).passenger.setName(newName);
+    public void updateBooking(String bookingID, String oldPassengerID, String newPassengerID, String newName) {
+        bookings.get(bookingID).passenger.setPassengerID(newPassengerID);
+        bookings.get(bookingID).passenger.setName(newName);
 
-            int check = 0;
-            for(Map.Entry<String, Booking> entry : bookings.entrySet()){
-                String currentPassengerID = entry.getValue().getPassengerID();
-                if(Objects.equals(currentPassengerID, oldPassengerID)){
-                   check += 1;
-                }
+        int check = 0;
+        for (Map.Entry<String, Booking> entry : bookings.entrySet()) {
+            String currentPassengerID = entry.getValue().getPassengerID();
+            if (Objects.equals(currentPassengerID, oldPassengerID)) {
+                check += 1;
             }
-            if(check == 0){
-                passengers.remove(oldPassengerID);
-            }
+        }
+        if (check == 0) {
+            passengers.remove(oldPassengerID);
+        }
 
-            //If the updated booking contains a new passenger, this passenger is added.
-            if(!passengers.containsKey(newPassengerID)){
-              passengers.put(newPassengerID, new Passenger(newPassengerID,newName));
-    }       }
+        //If the updated booking contains a new passenger, this passenger is added.
+        if (!passengers.containsKey(newPassengerID)) {
+            passengers.put(newPassengerID, new Passenger(newPassengerID, newName));
+        }
+
+        saveToJson();
+    }
+
     public boolean updatebleCheck(String bookingID){
        if(bookings.containsKey(bookingID)){
            if(bookingID.charAt(1) == 'P'){
@@ -396,6 +415,8 @@ public class LogicManager {
         String flightTimeString = Integer.toString(flightTime);
         Flight flight = new Flight(flightNr, departureCity, time, weekday, arrivalCity, airline, seatsString, flightTimeString);
         flights.put(flightNr, flight);
+
+        saveToJson();
     }
 
 
@@ -415,6 +436,9 @@ public class LogicManager {
             for(String element : bookingsToRemove){
                 bookings.remove(element);
             }
+
+            saveToJson();
+
             return true;
         } else{
             return false;
