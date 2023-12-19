@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Airline {
-    private String[] airlines =  {"sas","lufthansa","india air","bra","pakistan air"};;
+    private String[] airlines =  {"sas","lufthansa","india air","bra","pakistan air"};
     public Airline(){
         this.airlines = airlines;
     }

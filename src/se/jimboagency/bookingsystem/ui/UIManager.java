@@ -291,19 +291,19 @@ public class UIManager {
         System.out.print("Flight-nummer: ");
         String flightNr;
         while (true) {
-            flightNr = input.next();
+                flightNr = input.next();
 
-            if (this.logic.flightnrCheck(flightNr)) {
-                if (this.logic.flightnrPatternCheck(flightNr)){
-                    break;
+                if (this.logic.flightnrCheck(flightNr)) {
+                    if (this.logic.flightnrPatternCheck(flightNr)) {
+                        break;
+                    } else {
+                        System.out.println("Fel format.");
+                        System.out.print("Försök igen: ");
+                    }
                 } else {
-                    System.out.println("Fel format.");
+                    System.out.println("Flight-nummer existerar redan.");
                     System.out.print("Försök igen: ");
                 }
-            } else {
-                System.out.println("Flight-nummer existerar redan.");
-                System.out.print("Försök igen: ");
-            }
         }
 
         // Departure City
@@ -346,7 +346,7 @@ public class UIManager {
 
         // Airline
         System.out.print("Flygbolag: ");
-        String airline = input.next(); // Pre-programmed from list of airlines (minimum of 10 airlines)
+        String airline = input.nextLine(); // Pre-programmed from list of airlines (minimum of 10 airlines)
         while(true){
             if(this.logic.airlineCheck(airline)){
                 break;
@@ -354,15 +354,14 @@ public class UIManager {
                 System.out.println("Ogiltigt flygbolag.");
                 System.out.print("Försök igen: ");
             }
-            airline = input.next();
+            airline = input.nextLine();
         }
-        input.nextLine(); // Consume input
 
         // Seat specification
+        System.out.print("Platser: ");
         int seats;
         while (true) {
             try {
-                System.out.print("Platser: ");
                 seats = input.nextInt();
 
                 if (this.logic.seatCheck(seats)) { // Checks if integer is between 80-380

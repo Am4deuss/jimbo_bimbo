@@ -69,13 +69,13 @@ public class Flight {
 
             int index = Arrays.binarySearch(weekdays, date.toLowerCase());
 
-            if(index > 6) {
+            if(index > 8) {
                 index = 0;
             } else {
                 index++;
             }
 
-            return weekdays[0];
+            return weekdays[index];
         }
 
         return date;

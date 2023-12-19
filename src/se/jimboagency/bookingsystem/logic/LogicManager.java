@@ -41,14 +41,14 @@ public class LogicManager {
 
         airline = new Airline();
 
-        //flights = new HashMap<>();
+        flights = new HashMap<>();
         //flights.put("AA-123", new Flight("AA-123","Test1","00:00","måndag","Test2","SAS","80","4"));
 
-        //bookings = new HashMap<>();
+        bookings = new HashMap<>();
         //bookings.put("UP-0", new UpdatableBooking("UP-0", "AA-123", new Passenger("12345678", "Test Testsson"),  2024, 1));
         //bookings.put("UN-0", new UnUpdatableBooking("UN-0", "AA-123", new Passenger("12345678", "Test Testsson"), 2024, 1));
 
-        //passengers = new HashMap<>();
+        passengers = new HashMap<>();
         //passengers.put("12345678", new Passenger("12345678", "Test Testsson"));
 
         loadFromJson();
@@ -56,12 +56,29 @@ public class LogicManager {
     }
 
     // Error-management + Save to .json
+
     public void saveToJson(){
 
-        Gson gson = new Gson()
+        // Lite speciellt för booking eftersom vi behöver särskilja updatable/unupdatablebookings
+        Map<String, UpdatableBooking> upBookings  = new HashMap<>();
+        Map<String, UnUpdatableBooking> unBookings  = new HashMap<>();
+
+        for(Map.Entry<String, Booking> entry : bookings.entrySet()){
+            Booking currentBooking = entry.getValue();
+            if((currentBooking.getClass()) == (UpdatableBooking.class)){
+                UpdatableBooking upBooking = (UpdatableBooking) currentBooking ;
+                upBookings.put(entry.getKey(), upBooking);
+            } else{
+                UnUpdatableBooking unBooking = (UnUpdatableBooking) currentBooking;
+                unBookings.put(entry.getKey(), unBooking);
+            }
+        }
+
+        Gson gson = new Gson();
 
         String jsonFlights = gson.toJson(flights);
-        String jsonBookings = gson.toJson(bookings);
+        String jsonUpBookings = gson.toJson(upBookings);
+        String jsonUnBookings = gson.toJson(unBookings);
         String jsonPassengers = gson.toJson(passengers);
 
         try {
@@ -70,7 +87,9 @@ public class LogicManager {
             writerFlights.close();
 
             BufferedWriter writerBookings = new BufferedWriter(new FileWriter(filepathBookings));
-            writerBookings.write(jsonBookings);
+            writerBookings.write(jsonUpBookings);
+            writerBookings.newLine();
+            writerBookings.write(jsonUnBookings);
             writerBookings.close();
 
             BufferedWriter writerPassengers = new BufferedWriter(new FileWriter(filepathPassengers));
@@ -85,7 +104,8 @@ public class LogicManager {
     public void loadFromJson() {
 
         String dataFlightsJson = null;
-        String dataBookingsJson = null;
+        String dataUpBookingsJson = null;
+        String dataUnBookingsJson = null;
         String dataPassengersJson = null;
 
         try {
@@ -94,7 +114,8 @@ public class LogicManager {
             flightsReader.close();
 
             BufferedReader bookingsReader = new BufferedReader(new FileReader("bookings.json"));
-            dataBookingsJson = bookingsReader.readLine();
+            dataUpBookingsJson = bookingsReader.readLine();
+            dataUnBookingsJson = bookingsReader.readLine();
             bookingsReader.close();
 
             BufferedReader passengersReader = new BufferedReader(new FileReader("passengers.json"));
@@ -107,16 +128,36 @@ public class LogicManager {
         Gson gson = new Gson();
 
         Type flightType = new TypeToken<Map<String, Flight>>() {}.getType();
-        Type bookingType = new TypeToken<Map<String, UpdatableBooking>>() {}.getType();
+        Type upBookingType = new TypeToken<Map<String, UpdatableBooking>>() {}.getType();
+        Type unBookingType = new TypeToken<Map<String, UnUpdatableBooking>>() {}.getType();
         Type passengerType = new TypeToken<Map<String, Passenger>>() {}.getType();
 
+        Map<String, UpdatableBooking> upBookings;
+        Map<String, UnUpdatableBooking> unBookings;
+
         flights = gson.fromJson(dataFlightsJson, flightType);
-        bookings = gson.fromJson(dataBookingsJson, bookingType);
+        upBookings = gson.fromJson(dataUpBookingsJson, upBookingType);
+        unBookings = gson.fromJson(dataUnBookingsJson, unBookingType);
         passengers = gson.fromJson(dataPassengersJson, passengerType);
+
+        try {
+            for (Map.Entry<String, UpdatableBooking> entry : upBookings.entrySet()) {
+                UpdatableBooking currentBooking = entry.getValue();
+                bookings.put(entry.getKey(), currentBooking);
+            }
+
+            for (Map.Entry<String, UnUpdatableBooking> entry : unBookings.entrySet()) {
+                UnUpdatableBooking currentBooking = entry.getValue();
+                bookings.put(entry.getKey(), currentBooking);
+            }
+        }
+        catch(Exception e){
+
+        }
+
     }
 
     // (*) Functions used in several places
-
     public boolean authCheck(String[] args){
         username = "";
         String password = "";
@@ -173,7 +214,6 @@ public class LogicManager {
         return name;
     }
 
-
     //Takes personID and returns all bookings
     public ArrayList<Booking> searchBooking(String inputID){
         ArrayList<Booking> searchedBookings = new ArrayList<Booking>();
@@ -202,7 +242,7 @@ public class LogicManager {
 
     // Returns array for UIManager-functions: searchBookings() and stats()
     public ArrayList<String> searchPrinter(ArrayList<Booking> bookingList, ArrayList<Flight> flightList){
-        ArrayList<String> print = new ArrayList<String>();
+        ArrayList<String> print = new ArrayList<>();
         for(Booking currentBooking : bookingList) {
             Flight currentFlight = flights.get(currentBooking.getFlightNr());
             print.add(currentBooking.getBookingID() + " - " + currentBooking.getFlightNr() + " - " + currentFlight.getDepartureCity() + "(" + currentFlight.getDepDay() + ")" + " - " + currentFlight.getArrivalCity() + "(" + currentFlight.getArvDay() + ")" + " - " + currentBooking.getWeek() + " - " + currentBooking.getYear() + " - " + currentFlight.getDepTime() + " - " + currentFlight.getArvTime());
@@ -386,6 +426,7 @@ public class LogicManager {
         String[] weekdays = {"måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"};
         return Arrays.asList(weekdays).contains(weekday.toLowerCase());
     }
+
     public boolean airlineCheck(String airline){
         return this.airline.checkAirline(airline);
     }
@@ -418,8 +459,6 @@ public class LogicManager {
 
         saveToJson();
     }
-
-
 
     // (6) Remove Flight
     public boolean rmFlight(String flightNr){
